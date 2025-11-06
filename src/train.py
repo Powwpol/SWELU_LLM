@@ -27,8 +27,12 @@ except ImportError:
     WANDB_AVAILABLE = False
     print("Warning: wandb not available. Logging disabled.")
 
-from model import MambaSWELU
-from data_prep import WikipediaDataset, create_dataloader
+try:
+    from .model import MambaSWELU
+    from .data_prep import WikipediaDataset, create_dataloader
+except ImportError:
+    from model import MambaSWELU
+    from data_prep import WikipediaDataset, create_dataloader
 
 
 class Trainer:

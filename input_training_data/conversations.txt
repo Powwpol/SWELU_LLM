@@ -1,0 +1,44 @@
+Question: What is machine learning?
+Answer: Machine learning is a branch of artificial intelligence that enables computers to learn from data and improve their performance on tasks without being explicitly programmed. It uses algorithms that can identify patterns in data and make predictions or decisions based on those patterns.
+
+Question: How does a neural network work?
+Answer: A neural network consists of layers of interconnected nodes called neurons. Each connection has a weight, and each neuron applies an activation function to its weighted inputs. During training, the network adjusts these weights using backpropagation to minimize the difference between its predictions and actual outputs.
+
+Question: What is the difference between supervised and unsupervised learning?
+Answer: Supervised learning uses labeled data where both inputs and desired outputs are provided. The algorithm learns to map inputs to outputs. Unsupervised learning works with unlabeled data, finding hidden patterns or structures without explicit guidance about the correct outputs.
+
+Question: Explain the concept of overfitting.
+Answer: Overfitting occurs when a model learns the training data too well, including its noise and peculiarities, resulting in poor performance on new, unseen data. It happens when a model is too complex relative to the amount of training data available. Regularization techniques help prevent overfitting.
+
+Question: What are activation functions and why are they important?
+Answer: Activation functions introduce non-linearity into neural networks, allowing them to learn complex patterns. Common examples include ReLU, sigmoid, and tanh. Without activation functions, neural networks would only be able to learn linear relationships, severely limiting their capabilities.
+
+Question: How does gradient descent work?
+Answer: Gradient descent is an optimization algorithm that finds the minimum of a function by iteratively moving in the direction of steepest descent. It calculates the gradient (derivative) of the loss function with respect to parameters and updates them by taking steps proportional to the negative gradient.
+
+Question: What is the purpose of cross-validation?
+Answer: Cross-validation assesses how well a model generalizes to independent data. It splits the dataset into multiple folds, trains on some folds and validates on others, rotating through different combinations. This provides a more robust estimate of model performance than a single train-test split.
+
+Question: Explain the bias-variance tradeoff.
+Answer: Bias refers to errors from overly simplistic assumptions, leading to underfitting. Variance refers to errors from sensitivity to training data fluctuations, leading to overfitting. The goal is to balance these two sources of error to achieve optimal model performance on new data.
+
+Question: What is transfer learning?
+Answer: Transfer learning leverages knowledge from a model trained on one task to improve performance on a related task. Instead of training from scratch, you start with pre-trained weights and fine-tune them on your specific dataset. This is especially useful when you have limited training data.
+
+Question: How do attention mechanisms work?
+Answer: Attention mechanisms allow models to focus on relevant parts of the input when producing outputs. They compute attention scores that determine the importance of different input elements, then create a weighted combination. This enables models to handle long sequences and capture complex dependencies.
+
+Question: What is the difference between a parameter and a hyperparameter?
+Answer: Parameters are learned from data during training, such as weights and biases in a neural network. Hyperparameters are set before training and control the learning process, such as learning rate, number of layers, and batch size. Hyperparameters must be tuned through experimentation.
+
+Question: Explain what a loss function is.
+Answer: A loss function measures how well a model's predictions match the actual targets. It quantifies the error or cost of the model's performance. During training, the optimization algorithm adjusts model parameters to minimize the loss function, improving prediction accuracy.
+
+Question: What is regularization?
+Answer: Regularization adds constraints to prevent models from becoming too complex. Common techniques include L1 regularization (adds absolute value of weights to loss), L2 regularization (adds squared weights), and dropout (randomly disables neurons during training). These methods help reduce overfitting.
+
+Question: How does batch normalization help training?
+Answer: Batch normalization normalizes layer inputs by adjusting and scaling activations. It reduces internal covariate shift, allowing higher learning rates and faster training. It also acts as a regularizer, reducing the need for dropout. This leads to more stable and efficient training.
+
+Question: What are embeddings in natural language processing?
+Answer: Embeddings are dense vector representations of discrete objects like words or tokens. They capture semantic relationships, where similar words have similar vector representations. Word embeddings like Word2Vec and GloVe enable neural networks to process text effectively by converting words to continuous vectors.

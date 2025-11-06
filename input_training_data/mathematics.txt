@@ -1,0 +1,29 @@
+Mathematics is the abstract science of number, quantity, and space, either as abstract concepts or as applied to other disciplines. It provides a universal language for describing patterns, relationships, and logical structures.
+
+Algebra uses symbols and letters to represent numbers and quantities in equations and formulas. Linear equations have degree one, quadratic equations have degree two, and polynomial equations can have any degree. Solving equations involves isolating variables through algebraic manipulations.
+
+Calculus studies continuous change through derivatives and integrals. Derivatives measure instantaneous rates of change and slopes of curves. Integrals calculate areas under curves and accumulation of quantities. The fundamental theorem of calculus connects these two concepts.
+
+Geometry explores properties of shapes, sizes, positions, and dimensions. Euclidean geometry studies flat surfaces using axioms about points, lines, and planes. Non-Euclidean geometries include spherical and hyperbolic geometry, important in relativity and cosmology.
+
+Trigonometry examines relationships between angles and sides of triangles. Sine, cosine, and tangent are fundamental ratios. The unit circle provides a framework for extending trigonometric functions to all angles. These functions appear in wave phenomena, oscillations, and periodic behavior.
+
+Number theory investigates properties of integers. Prime numbers are divisible only by themselves and one. The fundamental theorem of arithmetic states every integer greater than one has a unique prime factorization. Modular arithmetic studies remainders after division.
+
+Probability theory quantifies uncertainty and likelihood of events. The probability of an event ranges from zero (impossible) to one (certain). Independent events don't affect each other, while dependent events are influenced by previous outcomes. Bayes' theorem updates probabilities based on new evidence.
+
+Statistics collects, analyzes, interprets, and presents data. Descriptive statistics summarize data using measures like mean, median, mode, and standard deviation. Inferential statistics draw conclusions about populations from samples using hypothesis testing and confidence intervals.
+
+Linear algebra studies vectors, matrices, and linear transformations. Matrices represent systems of linear equations, transformations, and data. Eigenvalues and eigenvectors describe special directions preserved under transformations, crucial in many applications.
+
+Differential equations relate functions to their derivatives, modeling dynamic systems. Ordinary differential equations involve one independent variable, while partial differential equations involve multiple. Solutions describe how systems evolve over time.
+
+Graph theory studies networks of connected nodes. Graphs model social networks, transportation systems, and computer networks. Important concepts include paths, cycles, connectivity, and graph coloring. Algorithms solve problems like shortest paths and network flow.
+
+Set theory provides foundations for mathematics. Sets are collections of distinct objects. Operations include union, intersection, and complement. Relations and functions connect elements between sets. Cardinality measures set size, with infinite sets having different sizes.
+
+Logic studies principles of valid reasoning. Propositional logic uses logical connectives like AND, OR, NOT, and IMPLIES. Predicate logic adds quantifiers for all and exists. Formal proof systems derive conclusions from axioms using inference rules.
+
+Complex numbers extend real numbers by including the imaginary unit i, where i² equals negative one. They're written as a + bi, where a and b are real numbers. Complex numbers have applications in electrical engineering, quantum mechanics, and signal processing.
+
+Mathematical proofs establish truth of statements through logical arguments. Direct proofs proceed from assumptions to conclusions. Proof by contradiction assumes the opposite and derives a contradiction. Mathematical induction proves statements for all natural numbers.

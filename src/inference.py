@@ -8,7 +8,10 @@ import torch
 from transformers import AutoTokenizer
 from typing import Optional
 
-from model import MambaSWELU
+try:
+    from .model import MambaSWELU
+except ImportError:
+    from model import MambaSWELU
 
 
 def generate_text(
