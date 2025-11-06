@@ -1,0 +1,19 @@
+Machine learning is a subset of artificial intelligence that enables computer systems to learn from data and improve their performance without being explicitly programmed. Deep learning, a specialized branch of machine learning, uses artificial neural networks with multiple layers to process complex patterns in large datasets.
+
+Neural networks are inspired by the biological structure of the human brain. They consist of interconnected nodes called neurons, organized in layers. Each neuron receives inputs, applies a transformation using weights and biases, and passes the result through an activation function to produce an output.
+
+The training process of neural networks involves adjusting weights and biases to minimize a loss function. This is typically done using gradient descent algorithms, which calculate the gradient of the loss with respect to each parameter and update them in the direction that reduces the loss.
+
+Backpropagation is a fundamental algorithm used to train neural networks. It efficiently computes gradients by applying the chain rule of calculus, propagating errors backward through the network from the output layer to the input layer.
+
+Convolutional Neural Networks (CNNs) are particularly effective for image processing tasks. They use specialized layers called convolutional layers that apply filters to detect local patterns such as edges, textures, and shapes. Pooling layers reduce spatial dimensions while preserving important features.
+
+Recurrent Neural Networks (RNNs) are designed to process sequential data by maintaining an internal state or memory. Long Short-Term Memory (LSTM) networks and Gated Recurrent Units (GRUs) are advanced RNN architectures that address the vanishing gradient problem and can capture long-range dependencies.
+
+Attention mechanisms have revolutionized natural language processing by allowing models to focus on relevant parts of the input sequence. The Transformer architecture, introduced in 2017, relies entirely on attention mechanisms and has become the foundation for modern language models.
+
+Transfer learning is a technique where a model trained on one task is adapted for a related task. This approach is particularly useful when labeled data is scarce, as it leverages knowledge learned from large datasets to improve performance on smaller, domain-specific datasets.
+
+Regularization techniques such as dropout, L1 and L2 regularization help prevent overfitting by constraining model complexity. Batch normalization stabilizes training by normalizing layer inputs, leading to faster convergence and better generalization.
+
+Reinforcement learning is a paradigm where agents learn to make decisions by interacting with an environment and receiving rewards or penalties. Q-learning and policy gradient methods are popular approaches for training reinforcement learning agents.

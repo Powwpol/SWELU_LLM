@@ -1,0 +1,39 @@
+A for loop iterates over a sequence, executing a block of code for each element. In Python, you write: for item in sequence: followed by the indented code block. For example, for i in range(10): print(i) will print numbers 0 through 9.
+
+List comprehensions provide a concise way to create lists. The syntax is [expression for item in iterable if condition]. For example, squares = [x**2 for x in range(10)] creates a list of squared numbers. This is more readable and often faster than using a regular for loop.
+
+Dictionary comprehensions work similarly to list comprehensions but create dictionaries. The syntax is {key_expression: value_expression for item in iterable}. For instance, {x: x**2 for x in range(5)} creates a dictionary mapping numbers to their squares.
+
+Lambda functions are small anonymous functions defined with the lambda keyword. The syntax is lambda arguments: expression. For example, square = lambda x: x**2 creates a function that squares its input. Lambdas are useful for short functions passed as arguments.
+
+The map function applies a function to every item in an iterable. map(function, iterable) returns an iterator. For example, map(str.upper, ['hello', 'world']) converts each string to uppercase. You often convert the result to a list: list(map(str.upper, words)).
+
+Filter removes elements from an iterable that don't satisfy a condition. filter(function, iterable) returns an iterator of elements where function returns True. For example, filter(lambda x: x > 0, numbers) keeps only positive numbers.
+
+Reduce accumulates values using a binary function. From functools import reduce, then use reduce(function, iterable, initial_value). For example, reduce(lambda x, y: x + y, [1, 2, 3, 4]) sums all elements, returning 10.
+
+Decorators modify functions or methods without changing their code. A decorator is a function that takes a function and returns a modified version. The @decorator_name syntax applies it. For example, @timer can measure execution time of any function it decorates.
+
+Classes define blueprints for objects. The __init__ method initializes new instances with self as the first parameter referring to the instance. Methods are functions defined inside classes that operate on instance data. Inheritance allows classes to extend other classes.
+
+Exception handling uses try-except blocks to catch and handle errors gracefully. Code that might raise an exception goes in the try block. The except block catches specific exceptions and defines how to respond. Finally blocks execute regardless of whether exceptions occurred.
+
+Context managers handle resource management using the with statement. They ensure resources are properly acquired and released, even if errors occur. The __enter__ and __exit__ methods define setup and teardown behavior. Files are commonly used with context managers.
+
+Generators create iterators using yield instead of return. They produce values on-demand rather than storing them all in memory. This is memory-efficient for large sequences. Each yield pauses execution and resumes from that point on the next iteration.
+
+List slicing extracts portions of lists using bracket notation with start, stop, and step parameters: list[start:stop:step]. Negative indices count from the end. For example, numbers[-3:] gets the last three elements, and numbers[::2] gets every second element.
+
+String formatting has multiple approaches. F-strings use f"text {variable}" for inline expressions. The format method uses placeholders: "Hello {}".format(name). Percent formatting uses printf-style syntax: "Hello %s" % name. F-strings are generally preferred for readability.
+
+Modules organize code into reusable files. Import statements load modules: import module or from module import function. Packages are collections of modules in directories with __init__.py files. The standard library provides many useful built-in modules.
+
+Virtual environments isolate project dependencies. Create one with python -m venv env_name, activate with source env_name/bin/activate on Unix or env_name\Scripts\activate on Windows. Each environment has its own Python interpreter and installed packages.
+
+Type hints specify expected types for function parameters and return values. def greet(name: str) -> str: indicates the function takes a string and returns a string. While not enforced at runtime, type hints improve code documentation and enable static type checking with tools like mypy.
+
+The enumerate function adds counters to iterables. for index, value in enumerate(iterable): provides both position and element. Start parameter sets initial counter value: enumerate(items, start=1) begins counting from 1 instead of 0.
+
+Zip combines multiple iterables element-wise. zip(iter1, iter2) returns tuples of corresponding elements. For example, zip([1, 2, 3], ['a', 'b', 'c']) produces (1, 'a'), (2, 'b'), (3, 'c'). It stops when the shortest iterable is exhausted.
+
+Unpacking assigns multiple variables from sequences: a, b, c = [1, 2, 3]. The asterisk operator collects remaining elements: first, *middle, last = numbers. This works in function calls too: print(*values) expands a list into separate arguments.

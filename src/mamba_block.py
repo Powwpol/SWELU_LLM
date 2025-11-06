@@ -17,7 +17,10 @@ except ImportError:
     MAMBA_AVAILABLE = False
     print("Warning: mamba-ssm not installed. Using simplified version.")
 
-from .swelu import SWELU
+try:
+    from .swelu import SWELU
+except ImportError:
+    from swelu import SWELU
 
 
 class MambaBlock(nn.Module):
