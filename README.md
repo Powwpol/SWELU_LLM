@@ -39,6 +39,8 @@ SWELU(z, k) = sign(z) × (1 - exp(-|z|^k))
 
 Where `k` is a learnable parameter initialized at 1.0.
 
+**Credits**: The SWELU (Smooth Weighted Exponential Linear Unit) activation function with learnable parameters was developed by **Paul Obara**.
+
 ## Installation
 
 ### Local Development
@@ -203,6 +205,11 @@ MIT License - See [LICENSE](LICENSE) file for details.
   url = {https://github.com/Powwpol/SWELU_LLM}
 }
 ```
+
+## Credits & Acknowledgments
+
+- **SWELU Activation Function**: Developed by Paul Obara - Original implementation of the Smooth Weighted Exponential Linear Unit with learnable parameter `k`
+- **Architecture Design**: MambaSWELU integration by Powwpol
 
 ## References
 
