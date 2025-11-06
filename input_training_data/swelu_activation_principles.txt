@@ -1,0 +1,8 @@
+SWELU (Smooth Weighted Exponential Linear Unit) provides an odd, bounded activation that stabilizes long sequence modeling by capping outputs within [-1, 1].
+
+Key behaviors to preserve during training:
+1. Maintain |k| strictly positive to avoid gradient collapse and sensitivity spikes.
+2. Monitor the activation histogram per layer to ensure saturation does not dominate; re-balance with LayerNorm or adjust k regularization if >25% of activations sit at the plateaus.
+3. Validate gradient consistency by checking that d/dz includes both the exponential decay term and the k-dependent power term; numerical instabilities often emerge when |z| < 1e-4.
+4. Initialize k near 1.0 but allow per-layer divergence; adaptive schedulers can widen representation capabilities when k ranges within [0.6, 1.8].
+5. When quantizing, calibrate SWELU-specific scales separately from other activations because the bounded output can mask underflow issues in low-bit regimes.

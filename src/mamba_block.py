@@ -143,6 +143,7 @@ class SimplifiedMamba(nn.Module):
         
         # SSM parameters (simplified)
         self.x_proj = nn.Linear(self.d_inner, d_state, bias=False)
+        self.state_proj = nn.Linear(d_state, self.d_inner, bias=False)
         self.dt_proj = nn.Linear(self.d_inner, self.d_inner, bias=True)
         
         # Output projection
@@ -171,10 +172,16 @@ class SimplifiedMamba(nn.Module):
         
         # Simplified SSM (using linear transformations)
         x = F.silu(x)  # Activation
-        
+
+        # Compute state dynamics and gating
+        state = torch.tanh(self.x_proj(x))  # (batch, seq_len, d_state)
+        state = self.state_proj(state)  # (batch, seq_len, d_inner)
+
+        dt = F.softplus(self.dt_proj(x))  # Positive modulation
+
         # Gate mechanism
-        z = F.sigmoid(z)
-        x = x * z
+        z = torch.sigmoid(z)
+        x = (x * z) + (state * dt)
         
         # Output projection
         x = self.out_proj(x)
