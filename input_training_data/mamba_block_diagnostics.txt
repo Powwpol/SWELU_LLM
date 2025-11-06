@@ -1,0 +1,6 @@
+Mamba block diagnostic checklist for gradient sanity:
+- Confirm residual connections retain full precision before activation; underflows here mute the additive skip path.
+- Verify the simplified SSM branch propagates gradients through both state_proj and dt_proj; missing paths frequently surface when the temporal filter is bypassed.
+- Track the gate tensor z after sigmoid to ensure its mean stays within [0.35, 0.65]; values outside this band indicate either dead or saturated gating.
+- During curriculum warm-up, gradually raise the convolution kernel size to avoid aliasing when sequence length exceeds 1k tokens.
+- Instrument layer-wise Jacobian norms each epoch; exploding norms >5x baseline suggest the expand factor needs clipping or additional dropout.

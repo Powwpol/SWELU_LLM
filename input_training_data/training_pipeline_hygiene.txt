@@ -1,0 +1,7 @@
+Training pipeline hygiene for SWELU-LLM experiments:
+1. Tokenizer alignment: re-tokenize any imported corpus to 50,257 vocab to avoid mismatched embedding indices.
+2. Sequence packing: pack documents with overlap stride=256 to balance context diversity against compute cost.
+3. Mixed precision guardrails: enable GradScaler in AMP mode and clamp loss scale to 1024 when validation perplexity oscillates.
+4. Regularize k: add L2 penalty 1e-4 on all learnable SWELU.k parameters; monitor for drift beyond ±0.8 from initialization.
+5. Evaluation cadence: run inference sanity prompts every 2k steps and store logits for regression testing against known baselines.
+6. Data versioning: snapshot raw text inputs with SHA256 hashes to detect silent corpus mutations before training restarts.
