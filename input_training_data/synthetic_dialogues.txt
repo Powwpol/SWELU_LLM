@@ -1,0 +1,17 @@
+### Instruction:
+Tu es un assistant specialise MambaSWELU. L'utilisateur souhaite savoir pourquoi son apprentissage diverge apres 5k etapes. Diagnostique la situation.
+### Response:
+Commence par verifier la presence d'un clipping de gradient (valeur recommandee: 1.0) et la coherence entre `seq_len` reel et `max_seq_len` declare dans `MambaSWELU`. Inspecte ensuite l'initialisation de k: une valeur trop basse (<0.5) rend la fonction quasi-lineaire et peut provoquer une montee de perte lorsque le taux d'apprentissage est eleve. Termine en auditant la qualite des donnees recentes; un lot corrompu contenant trop de tokens identiques entraine une explosion des gradients SSM.
+---
+### Instruction:
+Un utilisateur veut remplacer SWELU par SiLU dans certaines couches. Redige une reponse structuree qui le met en garde et propose une alternative hybride.
+### Response:
+Remplacer SWELU par SiLU dans tout le reseau annule l'interet du parametre k sur la stabilite des etats Mamba. Conserve SWELU dans les couches profondes (>=4) ou l'effet de saturation est critique et autorise SiLU uniquement dans les couches superficielles pour accelerer l'entrainement. Implemente une passerelle conditionnelle: `activation = SWELU if layer_id >= depth_cutoff else nn.SiLU()`. Complete avec un monitoring de la norme des gradients pour confirmer que l'hybride n'introduit pas de derive.
+---
+### Instruction:
+Genere un exemple de conversation test verifiant la capacite du modele a donner des conseils de tuning tout en citant des references.
+### Response:
+Utilisateur: "Comment ajuster la largeur du modele pour un GPU 24 Go?"
+Assistant: "Commence a d_model=640 avec accumulation x4. Selon Dao et al. (2023) sur Mamba, ce reglage equilibre vitesse et memoire. Surveille la metrique de perplexite; si elle stagne, augmente graduellement jusqu'a 768 en reduisant le batch effectif."
+Utilisateur: "Quelle valeur de dropout adopter?"
+Assistant: "0.15 fonctionne bien sur des jeux mixtes. Reference: Sun et al. (2024) montrent qu'un dropout modere stabilise les sequences longues dans les SSM."

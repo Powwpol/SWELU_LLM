@@ -99,9 +99,9 @@ class SWELUFunction(torch.autograd.Function):
         
         # Gradient w.r.t. z
         # d/dz [sign(z) * (1 - exp(-|z|^k))]
-        # = sign(z) * exp(-|z|^k) * k * |z|^(k-1)
+        # = exp(-|z|^k) * k * |z|^(k-1)
         exp_term = torch.exp(-z_power_k)
-        grad_z = sign_z * exp_term * k * torch.pow(abs_z + 1e-8, k - 1)
+        grad_z = exp_term * k * torch.pow(abs_z + 1e-8, k - 1)
         grad_z = grad_output * grad_z
         
         # Gradient w.r.t. k (if needed)
