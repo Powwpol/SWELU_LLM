@@ -16,8 +16,12 @@ import torch.nn.functional as F
 from typing import Optional, Dict, Any
 import math
 
-from .swelu import SWELU
-from .mamba_block import MambaStack
+try:
+    from .swelu import SWELU
+    from .mamba_block import MambaStack
+except ImportError:
+    from swelu import SWELU
+    from mamba_block import MambaStack
 
 
 class MambaSWELU(nn.Module):

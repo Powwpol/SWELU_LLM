@@ -36,7 +36,7 @@ except ImportError as e:
 
 # 2. Test SWELU activation
 print("\n[2/5] Testing SWELU activation...")
-swelu = SWELU(beta=1.0)
+swelu = SWELU(k_init=1.0, learnable=False)
 x = torch.randn(2, 4)
 y = swelu(x)
 assert y.shape == x.shape, "SWELU output shape mismatch"
@@ -52,8 +52,10 @@ model = MambaSWELU(
 )
 params = model.count_parameters()
 print(f"✓ Model created - Total params: {params['total']:,}")
-print(f"  - Mamba params: {params['mamba']:,}")
-print(f"  - SWELU params: {params['swelu']:,}")
+print(f"  - Embeddings: {params['embeddings']:,}")
+print(f"  - Mamba stack: {params['mamba_stack']:,}")
+print(f"  - Dense layers: {params['dense_layers']:,}")
+print(f"  - SWELU params: {params['swelu_params']:,}")
 
 # 4. Test forward pass
 print("\n[4/5] Testing forward pass...")
@@ -77,8 +79,8 @@ print(f"  - Loss: {outputs['loss'].item():.4f}")
 # 5. Test training loop (10 steps)
 print("\n[5/5] Testing training loop (10 steps)...")
 
-# Create dummy dataset
-dummy_data = list(range(10000))
+# Create dummy dataset (vocab_size=1000)
+dummy_data = [i % 1000 for i in range(10000)]  # Keep tokens in vocab range
 dataset = TextDataset(dummy_data, seq_len=64)
 dataloader = create_dataloader(
     dataset,
