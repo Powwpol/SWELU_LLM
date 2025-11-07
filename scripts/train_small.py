@@ -45,8 +45,10 @@ def main():
     
     params = model.count_parameters()
     print(f"Model parameters: {params['total']:,}")
-    print(f"  - Mamba: {params['mamba']:,}")
-    print(f"  - SWELU: {params['swelu']:,}")
+    print(f"  - Embeddings: {params['embeddings']:,}")
+    print(f"  - Mamba stack: {params['mamba_stack']:,}")
+    print(f"  - Dense layers: {params['dense_layers']:,}")
+    print(f"  - SWELU params: {params['swelu_params']:,}")
     
     # Check GPU availability
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
