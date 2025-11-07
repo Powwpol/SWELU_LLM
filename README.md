@@ -41,6 +41,70 @@ Where `k` is a learnable parameter initialized at 1.0.
 
 **Credits**: The SWELU (Smooth Weighted Exponential Linear Unit) activation function with learnable parameters was developed by **Paul Obara**.
 
+## Quick Start
+
+### 🚀 3 Scenarios
+
+| Scenario | Duration | Hardware | Cost | Use Case |
+|----------|----------|----------|------|----------|
+| **1. Local Test** | 2 min | CPU | Free | Verify setup works |
+| **2. Small Model** | 10 min | GPU (4GB+) | Free (Colab) | Test training pipeline |
+| **3. Full Training** | 40h | RTX 4090 | ~$16 | Production model |
+
+### Scenario 1: Local Test (2min, CPU)
+
+```bash
+git clone https://github.com/Powwpol/SWELU_LLM.git
+cd SWELU_LLM
+pip install -r requirements.txt
+python scripts/test_local.py
+```
+
+**Expected output:**
+```
+✓ All tests passed!
+Model: 10.2M parameters
+Loss: 9.82 → 8.15
+```
+
+**Next:** [Full local setup guide](docs/SETUP_LOCAL.md)
+
+### Scenario 2: Small Model (10min, GPU)
+
+**Requirements:** GPU with 4GB+ VRAM or Google Colab (free)
+
+```bash
+# Linux/Mac
+bash scripts/run_small.sh
+
+# Windows
+.\scripts\run_small.bat
+```
+
+This trains a 50M param model for 1000 steps.
+
+**Next:** If successful → RunPod
+
+### Scenario 3: Full Training (40h, RunPod)
+
+**Prerequisites:**
+- ✅ Local tests pass
+- ✅ Small model trains successfully
+- ✅ Wandb account + API key
+- ✅ Budget: $20+ on RunPod
+
+**Complete guide:** [RunPod Setup](docs/RUNPOD_SETUP.md)
+
+```bash
+# On RunPod RTX 4090 instance
+git clone https://github.com/Powwpol/SWELU_LLM.git
+cd SWELU_LLM
+bash scripts/setup_runpod.sh
+bash scripts/train_runpod.sh
+```
+
+**Cost:** ~$16 for 40h training
+
 ## Installation
 
 ### Local Development
@@ -58,16 +122,22 @@ source venv/bin/activate  # Linux/Mac
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Copy environment template
+cp docs/ENV_TEMPLATE.md .env
+# Edit .env and add your WANDB_API_KEY
 ```
 
 ### RunPod Setup
+
+See complete guide: [docs/RUNPOD_SETUP.md](docs/RUNPOD_SETUP.md)
 
 ```bash
 # On RunPod instance (RTX 4090)
 apt update && apt install -y git
 git clone https://github.com/Powwpol/SWELU_LLM.git
 cd SWELU_LLM
-pip install -r requirements.txt
+bash scripts/setup_runpod.sh
 ```
 
 ## Usage
