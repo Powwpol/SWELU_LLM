@@ -63,3 +63,6 @@ swelu.cs
 *.log
 logs/
 
+
+# Environment variables (contains API keys)
+.env
