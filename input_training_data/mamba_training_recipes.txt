@@ -1,0 +1,22 @@
+### Instruction:
+Propose un plan d'entrainement progressif pour un modele MambaSWELU afin de reduire le cout GPU initial sans sacrifier la qualite.
+### Response:
+Phase 1 - Warmup syntaxique (3M tokens). Utiliser un vocabulaire reduit (20k) et un d_model de 384 avec gradient accumulation x8. Surveiller la perplexite toutes les 2k iterations et arreter des que la stabilisation est atteinte.
+Phase 2 - Extension contextuelle (6M tokens). Augmenter le max_seq_len a 1k avec curriculum: concatener des segments courts puis longs. Activer SWELU avec k apprenable et introduire un dropout a 0.1.
+Phase 3 - Fine-tuning instruct (4M tokens). Melanger 60% de donnees conversationnelles et 40% de documents techniques. Employer un lr de 1.8e-4 avec decroissance cosinus; sauvegarder un checkpoint toutes les 2k iterations.
+Controle de qualite: valider sur un sous-ensemble representant chaque domaine et deriver un script de generation deterministe pour suivre les derives de style.
+---
+### Instruction:
+Decris un pipeline de preparation de donnees texte brut -> tokens utilisable avec `src/data_prep.py`.
+### Response:
+1. Regrouper les documents bruts au format UTF-8 dans `data/raw/` en conservant des metadonnees simples (source, date).
+2. Lancer une passe de nettoyage: retrait des triples espaces, normalisation Unicode NFC, filtrage des lignes < 5 caracteres.
+3. Executer `datasets.load_dataset` en mode streaming pour eviter l'overflow memoire; injecter un champ `text` consolide.
+4. Construire le tokenizer via `AutoTokenizer.from_pretrained("gpt2")` et ajouter des tokens speciaux pour les separateurs de sources.
+5. Sauvegarder les IDs concatenes dans `data/processed/*.pt` via `torch.save`; verifier la taille totale et declencher `TextDataset(token_ids, seq_len=2048, stride=1024)` pour equilibrer recouvrement et diversite.
+6. Tester le `DataLoader` en fixant `num_workers=0` sur machine locale; augmenter progressivement en production.
+---
+### Instruction:
+Explique comment monitorer la derive de la temperature generationnelle a partir de checkpoints successifs.
+### Response:
+Construire un banc de prompts fixes couvrant narration, technique, dialogue et raisonnement. Pour chaque checkpoint, generer 5 echantillons par prompt avec temperatures 0.7, 0.9 et 1.1. Calculer l'entropie moyenne des distributions de sortie sur les 50 premiers tokens, puis tracer l'evolution temporelle. Une derive se manifeste par une augmentation simultanee de l'entropie et des log-probabilites extremes. Declencher une alerte automatique lorsque l'ecart-type depasse 15% par rapport a la ligne de base.

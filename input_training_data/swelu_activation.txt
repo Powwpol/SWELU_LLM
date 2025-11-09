@@ -1,0 +1,39 @@
+### Instruction:
+Explique en detail la fonction d'activation SWELU et compare-la avec ReLU et GELU dans le contexte des modeles de langage.
+### Response:
+La SWELU, pour Smooth Weighted Exponential Linear Unit, applique la transformation sign(z) * (1 - exp(-|z|^k)) avec un parametre k apprenable qui module la vitesse de saturation. Contrairement a ReLU qui tronque toutes les valeurs negatives, la SWELU conserve la symetrie et reste bornee entre -1 et 1, ce qui limite les gradients explosifs. Comparee a GELU, qui est centree sur des approximations gaussiennes, la SWELU offre un controle direct sur la courbure via k. Dans un modele de langage sequentiel, cette propriete aide a stabiliser les couches profondes, surtout lorsqu'elles sont couplees a des blocs SSM comme Mamba.
+---
+### Instruction:
+Donne un exemple PyTorch montrant comment integrer SWELU dans un bloc Transformer simplifie.
+### Response:
+```
+import torch
+import torch.nn as nn
+from src.swelu import SWELU
+
+class MiniBlock(nn.Module):
+    def __init__(self, dim):
+        super().__init__()
+        self.norm = nn.LayerNorm(dim)
+        self.linear = nn.Linear(dim, dim)
+        self.act = SWELU(k_init=1.3, learnable=True)
+
+    def forward(self, x):
+        h = self.norm(x)
+        h = self.linear(h)
+        return x + self.act(h)
+
+x = torch.randn(2, 16, 128)
+block = MiniBlock(128)
+out = block(x)
+```
+Dans cet exemple, SWELU remplace SiLU afin de tester la stabilite numerique tout en conservant la connexion residuelle.
+---
+### Instruction:
+Decris un protocole experimental pour estimer la valeur optimale de k dans SWELU sur un jeu de validation language modeling.
+### Response:
+1. Definir une grille de valeurs initiales pour k (ex. 0.7, 1.0, 1.3, 1.6) et geler le parametre pour chaque essai.
+2. Entrainer un modele reduit (2 couches Mamba, d_model=256) sur un sous-echantillon representatif du corpus jusqu'a convergence rapide (1-2 epochs).
+3. Mesurer la perplexite de validation; selectionner les deux meilleurs k.
+4. Relancer l'entrainement en laissant k apprenable a partir des valeurs preselectionnees et suivre son evolution moyenne.
+5. Retenir le k menant a la meilleure perplexite finale et verifier qu'il ne diverge pas en fin d'entrainement complet.
