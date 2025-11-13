@@ -24,45 +24,56 @@ wheels/
 venv/
 env/
 ENV/
+.venv
 
 # IDEs
 .vscode/
 .idea/
-.cursor/
 *.swp
 *.swo
 *~
+.DS_Store
+
+# Training artifacts
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Logs
+logs/
+*.log
+training*.log
+nohup.out
+
+# Data
+data/
+datasets/
+cache/
+.cache/
+
+# Weights & Biases
+wandb/
+
+# Environment
+.env
+.env.local
 
 # Jupyter
 .ipynb_checkpoints/
-# Allow notebooks in notebooks/ directory
-# *.ipynb excluded by default except in notebooks/
+*.ipynb
 
-# Data & Models
-data/raw/
-data/processed/
-checkpoints/
-*.pth
-*.pt
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Large files (use Git LFS if needed)
 *.bin
-*.safetensors
-wandb/
-outputs/
+*.h5
+*.pb
+*.onnx
 
 # OS
-.DS_Store
 Thumbs.db
-
-# Old project files
-*.cs
-sauvergarde_*.txt
-swelu.txt
-swelu.cs
-
-# Logs
-*.log
-logs/
-
-
-# Environment variables (contains API keys)
-.env

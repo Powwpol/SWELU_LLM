@@ -75,6 +75,7 @@ class MambaBlock(nn.Module):
                 d_state=d_state,
                 d_conv=d_conv,
                 expand=expand,
+                swelu_k=swelu_k,
             )
         
         # Activation function
@@ -126,7 +127,7 @@ class SimplifiedMamba(nn.Module):
     NOT intended for production - install mamba-ssm for real implementation.
     """
     
-    def __init__(self, d_model: int, d_state: int, d_conv: int, expand: int):
+    def __init__(self, d_model: int, d_state: int, d_conv: int, expand: int, swelu_k: float = 1.0):
         super().__init__()
         
         self.d_model = d_model
@@ -147,6 +148,9 @@ class SimplifiedMamba(nn.Module):
         # SSM parameters (simplified)
         self.x_proj = nn.Linear(self.d_inner, d_state, bias=False)
         self.dt_proj = nn.Linear(self.d_inner, self.d_inner, bias=True)
+        
+        # SWELU activation for SSM (instead of F.silu)
+        self.ssm_activation = SWELU(k_init=swelu_k, learnable=True)
         
         # Output projection
         self.out_proj = nn.Linear(self.d_inner, d_model, bias=False)
@@ -173,7 +177,7 @@ class SimplifiedMamba(nn.Module):
         x = x_conv.transpose(1, 2)  # (batch, seq_len, d_inner)
         
         # Simplified SSM (using linear transformations)
-        x = F.silu(x)  # Activation
+        x = self.ssm_activation(x)  # SWELU Activation (replaces F.silu)
         
         # Gate mechanism
         z = F.sigmoid(z)
