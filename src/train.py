@@ -6,6 +6,7 @@ Supports:
 - Gradient accumulation
 - Checkpointing
 - Weights & Biases logging
+- Distributed Data Parallel (DDP) for multi-GPU
 """
 
 import torch
@@ -19,6 +20,9 @@ import json
 from tqdm import tqdm
 from typing import Optional
 import math
+import os
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
 
 try:
     import wandb
@@ -29,6 +33,7 @@ except ImportError:
 
 from model import MambaSWELU
 from data_prep import WikipediaDataset, create_dataloader
+from slimpajama_dataloader import create_slimpajama_dataloader
 
 
 class Trainer:
@@ -68,6 +73,7 @@ class Trainer:
         log_every: int = 100,
         eval_every: int = 1000,
         use_wandb: bool = False,
+        resume_from_checkpoint: Optional[str] = None,
     ):
         self.model = model
         self.train_dataloader = train_dataloader
@@ -85,9 +91,24 @@ class Trainer:
         self.log_every = log_every
         self.eval_every = eval_every
         
+        # Setup DDP
+        self.is_distributed = dist.is_initialized()
+        if self.is_distributed:
+            self.rank = dist.get_rank()
+            self.world_size = dist.get_world_size()
+            self.local_rank = int(os.environ.get("LOCAL_RANK", 0))
+        else:
+            self.rank = 0
+            self.world_size = 1
+            self.local_rank = 0
+        
         # Setup device
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(f"cuda:{self.local_rank}" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
+        
+        # Wrap model with DDP if distributed
+        if self.is_distributed:
+            self.model = DDP(self.model, device_ids=[self.local_rank])
         
         # Setup optimizer
         self.optimizer = AdamW(
@@ -119,6 +140,10 @@ class Trainer:
                     "mixed_precision": mixed_precision,
                 }
             )
+        
+        # Resume from checkpoint if provided
+        if resume_from_checkpoint:
+            self.load_checkpoint(resume_from_checkpoint)
     
     def get_lr(self, step: int) -> float:
         """Get learning rate with warmup and cosine decay."""
@@ -164,14 +189,17 @@ class Trainer:
         """Main training loop."""
         self.model.train()
         
-        print(f"Starting training for {self.max_steps} steps...")
-        print(f"Device: {self.device}")
-        print(f"Mixed precision: {self.mixed_precision}")
-        print(f"Gradient accumulation steps: {self.gradient_accumulation_steps}")
+        if self.rank == 0:
+            print(f"Starting training for {self.max_steps} steps...")
+            print(f"Device: {self.device}")
+            if self.is_distributed:
+                print(f"Distributed: {self.world_size} GPUs")
+            print(f"Mixed precision: {self.mixed_precision}")
+            print(f"Gradient accumulation steps: {self.gradient_accumulation_steps}")
         
         # Training loop
         train_iterator = iter(self.train_dataloader)
-        pbar = tqdm(total=self.max_steps, desc="Training")
+        pbar = tqdm(total=self.max_steps, desc="Training", disable=self.rank != 0)
         
         total_loss = 0.0
         
@@ -225,22 +253,25 @@ class Trainer:
             # Evaluation
             if self.val_dataloader and self.global_step % self.eval_every == 0:
                 val_loss = self.evaluate()
-                print(f"\nStep {self.global_step}: Validation loss = {val_loss:.4f}")
+                if self.rank == 0:
+                    print(f"\nStep {self.global_step}: Validation loss = {val_loss:.4f}")
                 
-                if self.use_wandb:
-                    wandb.log({"val/loss": val_loss, "val/step": self.global_step})
+                    if self.use_wandb:
+                        wandb.log({"val/loss": val_loss, "val/step": self.global_step})
                 
                 self.model.train()
             
-            # Checkpointing
-            if self.global_step % self.checkpoint_every == 0:
+            # Checkpointing (only on rank 0)
+            if self.rank == 0 and self.global_step % self.checkpoint_every == 0:
                 self.save_checkpoint()
         
         pbar.close()
-        print("Training complete!")
+        if self.rank == 0:
+            print("Training complete!")
         
-        # Save final model
-        self.save_checkpoint(final=True)
+        # Save final model (only on rank 0)
+        if self.rank == 0:
+            self.save_checkpoint(final=True)
     
     @torch.no_grad()
     def evaluate(self) -> float:
@@ -271,7 +302,10 @@ class Trainer:
         else:
             checkpoint_path = self.checkpoint_dir / f"model_step_{self.global_step}.pt"
         
-        self.model.save_pretrained(
+        # Unwrap DDP model if needed
+        model_to_save = self.model.module if self.is_distributed else self.model
+        
+        model_to_save.save_pretrained(
             str(checkpoint_path),
             optimizer_state=self.optimizer.state_dict(),
             global_step=self.global_step,
@@ -279,6 +313,27 @@ class Trainer:
         )
         
         print(f"Checkpoint saved to {checkpoint_path}")
+    
+    def load_checkpoint(self, checkpoint_path: str):
+        """Load training state from checkpoint."""
+        print(f"Loading checkpoint from {checkpoint_path}...")
+        checkpoint = torch.load(checkpoint_path, map_location=self.device)
+        
+        # Restore optimizer state if available
+        if "optimizer_state" in checkpoint:
+            self.optimizer.load_state_dict(checkpoint["optimizer_state"])
+            print("✅ Optimizer state restored")
+        
+        # Restore training state
+        if "global_step" in checkpoint:
+            self.global_step = checkpoint["global_step"]
+            print(f"✅ Resuming from step {self.global_step}")
+        
+        if "epoch" in checkpoint:
+            self.epoch = checkpoint["epoch"]
+            print(f"✅ Resuming from epoch {self.epoch}")
+        
+        print("Checkpoint loaded successfully!")
 
 
 def main():
@@ -300,7 +355,7 @@ def main():
     parser.add_argument("--mixed_precision", type=str, default="bf16", choices=["fp16", "bf16", "none"])
     
     # Data args
-    parser.add_argument("--dataset", type=str, default="wikipedia", choices=["wikipedia", "c4"])
+    parser.add_argument("--dataset", type=str, default="wikipedia", choices=["wikipedia", "c4", "slimpajama"])
     parser.add_argument("--num_workers", type=int, default=4)
     
     # Logging args
@@ -310,38 +365,63 @@ def main():
     parser.add_argument("--eval_every", type=int, default=1000)
     parser.add_argument("--use_wandb", action="store_true")
     
+    # Resume training
+    parser.add_argument("--resume_from_checkpoint", type=str, default=None, 
+                        help="Path to checkpoint file to resume training from")
+    
     args = parser.parse_args()
     
-    # Create model
-    print("Creating model...")
-    model = MambaSWELU(
-        vocab_size=args.vocab_size,
-        d_model=args.d_model,
-        n_layers=args.n_layers,
-        max_seq_len=args.max_seq_len,
-    )
+    # Create or load model
+    if args.resume_from_checkpoint:
+        print(f"Loading model from checkpoint: {args.resume_from_checkpoint}")
+        model = MambaSWELU.from_pretrained(
+            args.resume_from_checkpoint,
+            device="cpu"  # Will be moved to GPU later by trainer
+        )
+        print("✅ Model loaded from checkpoint!")
+    else:
+        print("Creating model...")
+        model = MambaSWELU(
+            vocab_size=args.vocab_size,
+            d_model=args.d_model,
+            n_layers=args.n_layers,
+            max_seq_len=args.max_seq_len,
+        )
     
     params = model.count_parameters()
     print(f"\nModel parameters: {params['total']:,}")
     
     # Load data
     print("\nLoading data...")
-    wiki_dataset = WikipediaDataset(seq_len=args.max_seq_len)
-    train_dataset = wiki_dataset.load(split="train[:90%]")
-    val_dataset = wiki_dataset.load(split="train[90%:]")
-    
-    train_dataloader = create_dataloader(
-        train_dataset,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        shuffle=True,
-    )
-    val_dataloader = create_dataloader(
-        val_dataset,
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-        shuffle=False,
-    )
+    if args.dataset == "slimpajama":
+        print("Using SlimPajama-627B dataset...")
+        train_dataloader = create_slimpajama_dataloader(
+            batch_size=args.batch_size,
+            max_seq_len=args.max_seq_len,
+            num_workers=0,  # Must be 0 for streaming
+            skip_samples=0,
+        )
+        # No validation dataloader for SlimPajama streaming
+        val_dataloader = None
+        print("Note: Validation disabled for SlimPajama streaming mode")
+    else:
+        print("Using Wikipedia dataset...")
+        wiki_dataset = WikipediaDataset(seq_len=args.max_seq_len)
+        train_dataset = wiki_dataset.load(split="train[:90%]")
+        val_dataset = wiki_dataset.load(split="train[90%:]")
+        
+        train_dataloader = create_dataloader(
+            train_dataset,
+            batch_size=args.batch_size,
+            num_workers=args.num_workers,
+            shuffle=True,
+        )
+        val_dataloader = create_dataloader(
+            val_dataset,
+            batch_size=args.batch_size,
+            num_workers=args.num_workers,
+            shuffle=False,
+        )
     
     # Create trainer
     trainer = Trainer(
@@ -359,6 +439,7 @@ def main():
         log_every=args.log_every,
         eval_every=args.eval_every,
         use_wandb=args.use_wandb,
+        resume_from_checkpoint=args.resume_from_checkpoint,
     )
     
     # Train
