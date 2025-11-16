@@ -1,0 +1,779 @@
+
+⚙️  Parameters: temp=0.6, tokens=60
+
+🤖 Response:
+   the number of rows in the table. 
+
+A: You should use this function:
+$(this).append('.form-group').click(function(e) {
+
+
+────────────────────────────────────────────────────────────────────────────────
+[Scenario 5/6] Creative Writing
+────────────────────────────────────────────────────────────────────────────────
+
+📝 Prompt:
+   The future of artificial intelligence is
+
+⚙️  Parameters: temp=0.8, tokens=70
+
+🤖 Response:
+   just being used to develop social media platforms to attract and share our own data with other brands. In order to make the market a great market for content and content, our customers are welcome to book a free free service.
+The Best of the Best
+The best I've ever been to is to be a part of a project that is a great
+
+
+────────────────────────────────────────────────────────────────────────────────
+[Scenario 6/6] Conversation Context
+────────────────────────────────────────────────────────────────────────────────
+
+📝 Prompt:
+   User: What's your favorite color?
+Assistant: I enjoy vibrant blue.
+User: Why blue?
+Assistant:
+
+⚙️  Parameters: temp=0.7, tokens=50
+
+🤖 Response:
+   I know this is my last post.
+I have a few comments on this issue. I do not know whether the last two sections will be edited, but I am still trying to make sure that I have to do the same thing.
+
+
+================================================================================
+  🌡️  TEMPERATURE VARIATION TEST
+================================================================================
+
+Prompt: "The most important thing in life is"
+
+────────────────────────────────────────────────────────────────────────────────
+
+🌡️  Temperature: 0.3
+────────────────────────────────────────
+   to be able to do something that is really important to you.
+The best way to get your business to work is to get the best possible experience.
+We have a wide range of services to help you get the best possible service.
+We
+
+🌡️  Temperature: 0.5
+────────────────────────────────────────
+   the self-confidence of the child.
+The first thing that we're doing is to make sure that you are not going to be a part of the process of writing a book.
+You need to know what your goals are and what you are
+
+🌡️  Temperature: 0.7
+────────────────────────────────────────
+   to take care of a child's ability to learn.
+The most important thing is to learn from your own life and your life.
+We also have a passion for providing the most creative and relevant products in the industry, so that everyone can get
+
+🌡️  Temperature: 0.9
+────────────────────────────────────────
+   making the world happen, and we can't stop in this situation because we are a part of a wider region. It's the only country in our country that has some important things to do, and yet the president has said he will have a big
+
+🌡️  Temperature: 1.2
+────────────────────────────────────────
+   this: The world is not an area that we would always wait for, so let it be said in the news, then you can say that there's no need to look.
+"This is my job. I am very proud. I have
+
+================================================================================
+  ✅ ALL TESTS COMPLETED
+================================================================================
+
+💡 Observations:
+   - Check for coherence and relevance in responses
+   - Higher temperature = more creative/random
+   - Lower temperature = more focused/deterministic
+
+📊 Next steps:
+   - Adjust temperature based on use case
+   - Try different checkpoints for comparison
+   - Fine-tune with specific domain data if needed
+
+root@ffa4c74af38d:~/SWELU_LLM# python test_chat.py --checkpoint checkpoints/model_gpu5/final_model.pt
+Warning: mamba-ssm not installed. Using simplified version.
+
+================================================================================
+  🚀 MambaSWELU Chat Test Suite
+================================================================================
+
+🖥️  Device: cuda
+
+🔤 Loading tokenizer...
+📦 Loading checkpoint: checkpoints/model_gpu5/final_model.pt
+
+📋 Model Configuration:
+   vocab_size: 50257
+   d_model: 1024
+   n_layers: 6
+   max_seq_len: 1024
+   tie_embeddings: True
+
+📊 Training Info:
+   Global step: 757,500
+   Epoch: 0
+   Parameters: 124,104,719
+
+================================================================================
+  🧪 CHAT SCENARIOS TEST
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+[Scenario 1/6] Simple Greeting
+────────────────────────────────────────────────────────────────────────────────
+
+📝 Prompt:
+   Hello! How are you?
+
+⚙️  Parameters: temp=0.7, tokens=50
+
+🤖 Response:
+   The Best Pops!
+The Best Of The Best
+The Best Dining Ideas
+Luxury Art Deco
+The New York Times, April 10, 2016
+"I've been talking to you about that," said the author,
+
+
+────────────────────────────────────────────────────────────────────────────────
+[Scenario 2/6] Question Answering
+────────────────────────────────────────────────────────────────────────────────
+
+📝 Prompt:
+   What is the capital of France?
+
+⚙️  Parameters: temp=0.5, tokens=30
+
+🤖 Response:
+   The city of Tárquez is one of the most important and important parts of the world. The second is the only way to get a
+
+
+────────────────────────────────────────────────────────────────────────────────
+[Scenario 3/6] Story Continuation
+────────────────────────────────────────────────────────────────────────────────
+
+📝 Prompt:
+   Once upon a time, in a magical forest, there lived a wise old owl who
+
+⚙️  Parameters: temp=0.9, tokens=80
+
+🤖 Response:
+   was so very young and happy that the child was a good teacher.
+The school had a very good sense of the importance of the university, and that they were not going to see a lot of the students in the school.
+The University of Florida is a nonprofit organization based in San Francisco, California.
+"The school is a great place to start," she said. "There's a
+
+
+────────────────────────────────────────────────────────────────────────────────
+[Scenario 4/6] Code Explanation
+────────────────────────────────────────────────────────────────────────────────
+
+📝 Prompt:
+   def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(n-1)
+
+This function calcu...
+
+⚙️  Parameters: temp=0.6, tokens=60
+
+🤖 Response:
+   the number of values in the first row of the list.
+This is the same thing I've tried to do, but I am not sure how to use it.
+I was also able to take a look at the various ways in which the system was built.
+The project was designed to
+
+
+────────────────────────────────────────────────────────────────────────────────
+[Scenario 5/6] Creative Writing
+────────────────────────────────────────────────────────────────────────────────
+
+📝 Prompt:
+   The future of artificial intelligence is
+
+⚙️  Parameters: temp=0.8, tokens=70
+
+🤖 Response:
+   also to be considered as a very important tool in developing new technologies.
+While the paper is not an online magazine, the website does not require access to data. The information provided by this website is intended to be used to help clients identify the relevant information regarding the information to be provided.
+"The use of a high level of support is important
+
+
+────────────────────────────────────────────────────────────────────────────────
+[Scenario 6/6] Conversation Context
+────────────────────────────────────────────────────────────────────────────────
+
+📝 Prompt:
+   User: What's your favorite color?
+Assistant: I enjoy vibrant blue.
+User: Why blue?
+Assistant:
+
+⚙️  Parameters: temp=0.7, tokens=50
+
+🤖 Response:
+   KPMG
+The first time I had a discussion with the editor, I didn't think I was in the right position, so I guess it was a bit too much to get the ball out of the way. I was not even able to
+
+
+================================================================================
+  🌡️  TEMPERATURE VARIATION TEST
+================================================================================
+
+Prompt: "The most important thing in life is"
+
+────────────────────────────────────────────────────────────────────────────────
+
+🌡️  Temperature: 0.3
+────────────────────────────────────────
+   the ability to get to the point where you're not alone.
+The best way to do this is to get the best results for you.
+The best way to get the best results is to find a way to get your business started.
+
+🌡️  Temperature: 0.5
+────────────────────────────────────────
+   the loss of a child and a child.
+I am very grateful for the opportunity to work with you to help you make sure that you are working on your business.
+We are looking for a real estate agent to help you understand the best way
+
+🌡️  Temperature: 0.7
+────────────────────────────────────────
+   to know what it's like to do something like that.
+In this case, the only way to get a different type of address for the user is not a requirement.
+The question is, would it be possible to make a decision in the
+
+🌡️  Temperature: 0.9
+────────────────────────────────────────
+   the first thing to learn about it. The other way around, that's the question of the game.
+But there's that fact. Just like you can see, there's a lot of the same issues as the movie, but I'm never
+
+🌡️  Temperature: 1.2
+────────────────────────────────────────
+   the development and the development of a new level of control to our community and community. This will provide our students of all levels on the road to change. Our education will ensure a well known learning experience based on our support and respect. The process is
+
+================================================================================
+  ✅ ALL TESTS COMPLETED
+================================================================================
+
+💡 Observations:
+   - Check for coherence and relevance in responses
+   - Higher temperature = more creative/random
+   - Lower temperature = more focused/deterministic
+
+📊 Next steps:
+   - Adjust temperature based on use case
+   - Try different checkpoints for comparison
+   - Fine-tune with specific domain data if needed
+
+root@ffa4c74af38d:~/SWELU_LLM# timeout 120 python demo_chat.py 2>&1
+^Cobject address  : 0x7135e241e680
+object refcount : 3
+object type     : 0xa36620
+object type name: KeyboardInterrupt
+object repr     : KeyboardInterrupt()
+lost sys.stderr
+^C^C
+root@ffa4c74af38d:~/SWELU_LLM# cd /root/SWELU_LLM && python test_chat.py
+Warning: mamba-ssm not installed. Using simplified version.
+======================================================================
+  CHAT TEST - MambaSWELU
+======================================================================
+
+Device: cuda
+Loading: checkpoints/model_gpu5/final_model.pt
+
+Config: {'vocab_size': 50257, 'd_model': 1024, 'n_layers': 6, 'max_seq_len': 1024, 'tie_embeddings': True}
+Step: 757,500
+
+======================================================================
+  TEST PROMPTS
+======================================================================
+
+[1] Question: What is machine learning?
+Answer:
+----------------------------------------------------------------------
+-> Question: What is machine learning?
+Answer: A program that meets the needs of the users, including the use of the data, and the presence of third-party cookies.
+For example, if you have a device that allows you to track your audio images, it's not a good idea to choose the best of the same.
+Now
+
+
+[2] Write a story: Once upon a time
+----------------------------------------------------------------------
+-> Write a story: Once upon a time, I'll tell you what you can do to your family.
+So, for many years, I've read a lot of books and I have been working with a lot of the students. I've been in a "life" and I'm not sure what's coming in the future. But
+
+
+[3] Code: def hello_world():
+----------------------------------------------------------------------
+-> Code: def hello_world():
+            self.assertEqual(self.table_id)
+        self.assertEqual(self.value, self.result.first_name, 'class_name'))
+   
+
+
+[4] Explain: The difference between AI and ML is
+----------------------------------------------------------------------
+-> Explain: The difference between AI and ML is a big step forward in the development of a new and innovative solution to the problem.
+The project is planned to be the first in the UK to support the project, with its new development of the new facility.
+The new project will be designed to provide the most appropriate service for our staff,
+
+
+[5] Translate to French: Hello, how are you?
+----------------------------------------------------------------------
+-> Translate to French: Hello, how are you?
+It's a great post. I like to think I'm trying to be a better person.
+I'm not really sure how to be a "poster" for this book. I'm not going to say the same thing about the book.
+I'm a writer and I can't
+
+======================================================================
+  TEMPERATURE TESTS
+======================================================================
+
+Temp=0.3: The future of AI is
+----------------------------------------------------------------------
+-> The future of AI is the most important part of the future of the Internet.
+The company is a leading provider of services for the digital marketing industry. The company has been working with the company to create a new product and services for the company.
+"We are proud
+
+
+Temp=0.7: The future of AI is
+----------------------------------------------------------------------
+-> The future of AI is an important element in the development of the internet. It's also an important part of the process of understanding the world through the use of technology and the use of technology.
+The company has a history of using AI to produce and analyze the data in
+
+
+Temp=1.0: The future of AI is
+----------------------------------------------------------------------
+-> The future of AI is coming from its own customers.
+By comparison, it isn't quite the right time to set up a new platform in which users can get out to their web-based online marketing campaign, it's not very easy to search. I'm looking for
+
+======================================================================
+  DONE
+======================================================================
+root@ffa4c74af38d:~/SWELU_LLM# ^C
+root@ffa4c74af38d:~/SWELU_LLM# python quick_chat_test.py
+python quick_chat_test.py
+python quick_chat_test.py
+Warning: mamba-ssm not installed. Using simplified version.
+======================================================================
+  🚀 Quick Chat Test - MambaSWELU
+======================================================================
+^CTraceback (most recent call last):
+  File "/root/SWELU_LLM/quick_chat_test.py", line 17, in <module>
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py", line 182, in is_available
+    return torch._C._cuda_getDeviceCount() > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+root@ffa4c74af38d:~/SWELU_LLM# ^C
+root@ffa4c74af38d:~/SWELU_LLM# python -c "import torch; print('PyTorch:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('CUDA devices:', torch.cuda.device_count() if torch.cuda.is_available() else 0)"
+python -u quick_chat_test.py 2>&1 | tee chat_output.log
+PyTorch: 2.8.0+cu128
+CUDA available: True
+CUDA devices: 6
+root@ffa4c74af38d:~/SWELU_LLM# python -u quick_chat_test.py 2>&1 | tee chat_output.log
+Warning: mamba-ssm not installed. Using simplified version.
+======================================================================
+  🚀 Quick Chat Test - MambaSWELU
+======================================================================
+
+Device: cuda
+Loading: checkpoints/model_gpu5/final_model.pt
+Config: {'vocab_size': 50257, 'd_model': 1024, 'n_layers': 6, 'max_seq_len': 1024, 'tie_embeddings': True}
+Step: 757,500
+
+======================================================================
+  💬 Chat Tests
+======================================================================
+
+[1/3] You: Hello! How are you today?
+Assistant: Luxury is not a good idea. But it's really important to know that the "new" system is an option for the next generation.
+The company has announced that it has announced a $1.8 billion loan from the company, which will be used to provide a $50
+----------------------------------------------------------------------
+
+[2/3] You: What is artificial intelligence?
+Assistant: A: It's important to note that it is not possible to use the same type of information as the target.
+
+A: The problem is that a user can't get a call from a server to get a service.
+
+A: If you want to use the following code to
+----------------------------------------------------------------------
+
+[3/3] You: Write a haiku about coding:
+^C
+root@ffa4c74af38d:~/SWELU_LLM# ls -lh checkpoints/model_gpu5/final_model.pt
+-rw-r--r-- 1 root root 1.2G Nov 14 07:54 checkpoints/model_gpu5/final_model.pt
+root@ffa4c74af38d:~/SWELU_LLM# ^C
+root@ffa4c74af38d:~/SWELU_LLM# tail -50 chat_output.log
+Warning: mamba-ssm not installed. Using simplified version.
+======================================================================
+  🚀 Quick Chat Test - MambaSWELU
+======================================================================
+
+Device: cuda
+Loading: checkpoints/model_gpu5/final_model.pt
+Config: {'vocab_size': 50257, 'd_model': 1024, 'n_layers': 6, 'max_seq_len': 1024, 'tie_embeddings': True}
+Step: 757,500
+
+======================================================================
+  💬 Chat Tests
+======================================================================
+
+[1/3] You: Hello! How are you today?
+Assistant: Luxury is not a good idea. But it's really important to know that the "new" system is an option for the next generation.
+The company has announced that it has announced a $1.8 billion loan from the company, which will be used to provide a $50
+----------------------------------------------------------------------
+
+[2/3] You: What is artificial intelligence?
+Assistant: A: It's important to note that it is not possible to use the same type of information as the target.
+
+A: The problem is that a user can't get a call from a server to get a service.
+
+A: If you want to use the following code to
+----------------------------------------------------------------------
+
+[3/3] You: Write a haiku about coding:
+root@ffa4c74af38d:~/SWELU_LLM# ^C
+root@ffa4c74af38d:~/SWELU_LLM# python -u demo_chat.py 2>&1
+Warning: mamba-ssm not installed. Using simplified version.
+
+======================================================================
+  🤖 DÉMONSTRATION CHAT - MambaSWELU
+======================================================================
+
+📍 Device: cuda
+
+📦 Chargement du checkpoint...
+   Path: checkpoints/model_gpu5/final_model.pt
+   Temps de chargement: 0.87s
+
+📊 Configuration:
+   - vocab_size: 50257
+   - d_model: 1024
+   - n_layers: 6
+   - max_seq_len: 1024
+   - tie_embeddings: True
+
+🎯 Training: Step 757,500
+
+🔧 Initialisation du modèle...
+   Paramètres: 124,104,719
+
+📝 Chargement du tokenizer...
+
+======================================================================
+  💬 TESTS DE GÉNÉRATION
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test 1/5: Salutation basique
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Hello! How are you?"
+⚙️  Params: temp=0.7, max_tokens=40
+
+🤖 Réponse (0.54s):
+   Hello! How are you? The world's largest business that is still not quite ready to be in the world, it's worth the money.
+Mozilla is a very popular food food that you can buy and not only
+
+──────────────────────────────────────────────────────────────────────
+Test 2/5: Complétion factuelle (basse température)
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "The capital of France is"
+⚙️  Params: temp=0.3, max_tokens=20
+
+🤖 Réponse (0.07s):
+   The capital of France is the capital of the city of Bali.
+The city of Pune is a city of the
+
+──────────────────────────────────────────────────────────────────────
+Test 3/5: Narration créative (haute température)
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Once upon a time, in a magical kingdom,"
+⚙️  Params: temp=0.9, max_tokens=60
+
+🤖 Réponse (0.21s):
+   Once upon a time, in a magical kingdom, the Holy Spirit, and all the life of God. His grace, the Father, his God, His life, his soul, his life, his heart, his life, and the whole world."
+For decades, the book featured the author's first novel, The Night of the Night.
+
+
+──────────────────────────────────────────────────────────────────────
+Test 4/5: Question-Réponse simple
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Question: What is 2+2?
+Answer:"
+⚙️  Params: temp=0.5, max_tokens=30
+
+🤖 Réponse (0.10s):
+   Question: What is 2+2?
+Answer: The question is whether you have a "real" or "good" value on a regular basis, you should know that there are plenty of ways to
+
+──────────────────────────────────────────────────────────────────────
+Test 5/5: Complétion de code
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "def fibonacci(n):
+    # This function returns"
+⚙️  Params: temp=0.6, max_tokens=40
+
+🤖 Réponse (0.14s):
+   def fibonacci(n):
+    # This function returns the first value of the key.
+    public void add(String type) {
+        return (String) getClass().get(i);
+ 
+
+======================================================================
+  ✅ DÉMONSTRATION TERMINÉE
+======================================================================
+
+📊 Résumé:
+   - Modèle: MambaSWELU (124,104,719 paramètres)
+   - Checkpoint: Step 757,500
+   - Device: cuda
+   - Tests réalisés: 5
+
+💡 Observations:
+   - Le modèle génère du texte de manière fluide
+   - La cohérence varie selon le prompt et la température
+   - Température basse (0.3-0.5) = plus déterministe
+   - Température haute (0.8-1.0) = plus créatif
+
+🔧 Pour usage interactif:
+   - Créez un wrapper web (Gradio/Streamlit)
+   - Ajustez les prompts pour votre cas d'usage
+   - Fine-tunez si besoin sur des données spécifiques
+
+root@ffa4c74af38d:~/SWELU_LLM# ^C
+root@ffa4c74af38d:~/SWELU_LLM# python -u demo_chat.py 2>&1 | tee demo_output.log && cat demo_output.log
+Warning: mamba-ssm not installed. Using simplified version.
+
+======================================================================
+  🤖 DÉMONSTRATION CHAT - MambaSWELU
+======================================================================
+
+📍 Device: cuda
+
+📦 Chargement du checkpoint...
+   Path: checkpoints/model_gpu5/final_model.pt
+   Temps de chargement: 0.84s
+
+📊 Configuration:
+   - vocab_size: 50257
+   - d_model: 1024
+   - n_layers: 6
+   - max_seq_len: 1024
+   - tie_embeddings: True
+
+🎯 Training: Step 757,500
+
+🔧 Initialisation du modèle...
+   Paramètres: 124,104,719
+
+📝 Chargement du tokenizer...
+
+======================================================================
+  💬 TESTS DE GÉNÉRATION
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test 1/5: Salutation basique
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Hello! How are you?"
+⚙️  Params: temp=0.7, max_tokens=40
+
+🤖 Réponse (0.57s):
+   Hello! How are you?
+A: I'm very lucky to have a business in the field of education and I know that they'll be able to build a new job in order to work hard for them.
+"We
+
+──────────────────────────────────────────────────────────────────────
+Test 2/5: Complétion factuelle (basse température)
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "The capital of France is"
+⚙️  Params: temp=0.3, max_tokens=20
+
+🤖 Réponse (0.07s):
+   The capital of France is the city of Tijdens. The city is located in the heart of the city, and
+
+──────────────────────────────────────────────────────────────────────
+Test 3/5: Narration créative (haute température)
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Once upon a time, in a magical kingdom,"
+⚙️  Params: temp=0.9, max_tokens=60
+
+🤖 Réponse (0.21s):
+   Once upon a time, in a magical kingdom, a woman, a woman, a woman, a woman, a woman and more. The couple is more of a child than an old man.
+It's really not clear whether I know of a girl living in the town, but it will be the kind of family that has to share it with
+
+──────────────────────────────────────────────────────────────────────
+Test 4/5: Question-Réponse simple
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Question: What is 2+2?
+Answer:"
+⚙️  Params: temp=0.5, max_tokens=30
+
+🤖 Réponse (0.10s):
+   Question: What is 2+2?
+Answer: The first is the number of words in the text.
+The first is the result of the first one, that is, the "no" event
+
+──────────────────────────────────────────────────────────────────────
+Test 5/5: Complétion de code
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "def fibonacci(n):
+    # This function returns"
+⚙️  Params: temp=0.6, max_tokens=40
+
+🤖 Réponse (0.14s):
+   def fibonacci(n):
+    # This function returns the value of the value of a value.
+        /// </summary>
+        public void TestExist(String response) {
+
+
+======================================================================
+  ✅ DÉMONSTRATION TERMINÉE
+======================================================================
+
+📊 Résumé:
+   - Modèle: MambaSWELU (124,104,719 paramètres)
+   - Checkpoint: Step 757,500
+   - Device: cuda
+   - Tests réalisés: 5
+
+💡 Observations:
+   - Le modèle génère du texte de manière fluide
+   - La cohérence varie selon le prompt et la température
+   - Température basse (0.3-0.5) = plus déterministe
+   - Température haute (0.8-1.0) = plus créatif
+
+🔧 Pour usage interactif:
+   - Créez un wrapper web (Gradio/Streamlit)
+   - Ajustez les prompts pour votre cas d'usage
+   - Fine-tunez si besoin sur des données spécifiques
+
+Warning: mamba-ssm not installed. Using simplified version.
+
+======================================================================
+  🤖 DÉMONSTRATION CHAT - MambaSWELU
+======================================================================
+
+📍 Device: cuda
+
+📦 Chargement du checkpoint...
+   Path: checkpoints/model_gpu5/final_model.pt
+   Temps de chargement: 0.84s
+
+📊 Configuration:
+   - vocab_size: 50257
+   - d_model: 1024
+   - n_layers: 6
+   - max_seq_len: 1024
+   - tie_embeddings: True
+
+🎯 Training: Step 757,500
+
+🔧 Initialisation du modèle...
+   Paramètres: 124,104,719
+
+📝 Chargement du tokenizer...
+
+======================================================================
+  💬 TESTS DE GÉNÉRATION
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Test 1/5: Salutation basique
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Hello! How are you?"
+⚙️  Params: temp=0.7, max_tokens=40
+
+🤖 Réponse (0.57s):
+   Hello! How are you?
+A: I'm very lucky to have a business in the field of education and I know that they'll be able to build a new job in order to work hard for them.
+"We
+
+──────────────────────────────────────────────────────────────────────
+Test 2/5: Complétion factuelle (basse température)
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "The capital of France is"
+⚙️  Params: temp=0.3, max_tokens=20
+
+🤖 Réponse (0.07s):
+   The capital of France is the city of Tijdens. The city is located in the heart of the city, and
+
+──────────────────────────────────────────────────────────────────────
+Test 3/5: Narration créative (haute température)
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Once upon a time, in a magical kingdom,"
+⚙️  Params: temp=0.9, max_tokens=60
+
+🤖 Réponse (0.21s):
+   Once upon a time, in a magical kingdom, a woman, a woman, a woman, a woman, a woman and more. The couple is more of a child than an old man.
+It's really not clear whether I know of a girl living in the town, but it will be the kind of family that has to share it with
+
+──────────────────────────────────────────────────────────────────────
+Test 4/5: Question-Réponse simple
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "Question: What is 2+2?
+Answer:"
+⚙️  Params: temp=0.5, max_tokens=30
+
+🤖 Réponse (0.10s):
+   Question: What is 2+2?
+Answer: The first is the number of words in the text.
+The first is the result of the first one, that is, the "no" event
+
+──────────────────────────────────────────────────────────────────────
+Test 5/5: Complétion de code
+──────────────────────────────────────────────────────────────────────
+
+📝 Prompt: "def fibonacci(n):
+    # This function returns"
+⚙️  Params: temp=0.6, max_tokens=40
+
+🤖 Réponse (0.14s):
+   def fibonacci(n):
+    # This function returns the value of the value of a value.
+        /// </summary>
+        public void TestExist(String response) {
+
+
+======================================================================
+  ✅ DÉMONSTRATION TERMINÉE
+======================================================================
+
+📊 Résumé:
+   - Modèle: MambaSWELU (124,104,719 paramètres)
+   - Checkpoint: Step 757,500
+   - Device: cuda
+   - Tests réalisés: 5
+
+💡 Observations:
+   - Le modèle génère du texte de manière fluide
+   - La cohérence varie selon le prompt et la température
+   - Température basse (0.3-0.5) = plus déterministe
+   - Température haute (0.8-1.0) = plus créatif
+
+🔧 Pour usage interactif:
+   - Créez un wrapper web (Gradio/Streamlit)
+   - Ajustez les prompts pour votre cas d'usage
+   - Fine-tunez si besoin sur des données spécifiques
