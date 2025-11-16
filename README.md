@@ -122,6 +122,9 @@ SWELU(z, k) = sign(z) × (1 - exp(-|z|^k))
 
 where **k is a learnable parameter** that adapts during training.
 
+> **Attribution / Crédit**: La fonction d'activation SWELU utilisée dans ce projet a été initialement proposée et déposée par **Paul OBARA**.  
+> Si vous réutilisez SWELU ou cette implémentation dans vos travaux (articles, projets open‑source, produits, etc.), merci de **citer explicitement Paul OBARA** en plus de ce dépôt.
+
 ### Why SWELU?
 
 - **Adaptive**: Each layer learns its optimal activation shape
