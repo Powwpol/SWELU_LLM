@@ -1,9 +1,14 @@
 """
-SWELU: Smooth Weighted Exponential Linear Unit activation function.
+SWELU: Symmetric Weighted Exponential Linear Unit activation function.
 
-Formula: SWELU(z, k) = sign(z) × (1 - exp(-|z|^k))
+Baseline intuition:
+    - WELU(x; k, λ)  ~  λ · (1 - exp(-(x / λ)**k))        for x >= 0
+    - sWELU(x; k, λ) ~  sign(x) · λ · (1 - exp(-(|x|/λ)**k))  (odd / symmetric)
 
-Where k is a learnable parameter that controls the shape of the activation.
+Ici on implémente directement la version symétrique (sWELU) avec
+deux paramètres apprenables:
+    - k  (shape): contrôle la courbure
+    - λ  (lambda, scale): contrôle l’amplitude de saturation
 """
 
 import torch
@@ -13,29 +18,35 @@ import torch.nn.functional as F
 
 class SWELU(nn.Module):
     """
-    SWELU activation function with learnable parameter k.
+    Symmetric WELU (sWELU) with learnable k and λ.
     
     Args:
-        k_init (float): Initial value for parameter k. Default: 1.0
-        learnable (bool): Whether k should be learnable. Default: True
+        k_init (float): Initial value for shape parameter k. Default: 1.0
+        lambda_init (float): Initial value for scale parameter λ. Default: 1.0
+        learnable (bool): Whether k and λ are learnable. Default: True
     
     Shape:
         - Input: (N, *) where * means any number of additional dimensions
         - Output: (N, *), same shape as input
-    
-    Examples:
-        >>> swelu = SWELU(k_init=1.0, learnable=True)
-        >>> x = torch.randn(2, 3)
-        >>> output = swelu(x)
     """
     
-    def __init__(self, k_init: float = 1.0, learnable: bool = True):
+    def __init__(
+        self,
+        k_init: float = 1.0,
+        lambda_init: float = 1.0,
+        learnable: bool = True,
+    ):
         super().__init__()
         
+        k_tensor = torch.tensor(k_init, dtype=torch.float32)
+        lam_tensor = torch.tensor(lambda_init, dtype=torch.float32)
+        
         if learnable:
-            self.k = nn.Parameter(torch.tensor(k_init, dtype=torch.float32))
+            self.k = nn.Parameter(k_tensor)
+            self.lam = nn.Parameter(lam_tensor)
         else:
-            self.register_buffer('k', torch.tensor(k_init, dtype=torch.float32))
+            self.register_buffer("k", k_tensor)
+            self.register_buffer("lam", lam_tensor)
     
     def forward(self, z: torch.Tensor) -> torch.Tensor:
         """
@@ -47,24 +58,23 @@ class SWELU(nn.Module):
         Returns:
             Activated tensor with same shape as input
         """
-        # Ensure k is positive
+        # Ensure k and λ are positive
         k = torch.abs(self.k) + 1e-6
+        lam = torch.abs(self.lam) + 1e-6
         
-        # Compute |z|^k
+        # sWELU(z; k, λ) = sign(z) * λ * (1 - exp(-(|z|/λ)**k))
         abs_z = torch.abs(z)
-        z_power_k = torch.pow(abs_z + 1e-8, k)  # Add small epsilon for stability
+        scaled = abs_z / lam
+        z_power_k = torch.pow(scaled + 1e-8, k)  # Add small epsilon for stability
         
-        # Compute 1 - exp(-|z|^k)
-        activation = 1.0 - torch.exp(-z_power_k)
-        
-        # Apply sign
+        activation = lam * (1.0 - torch.exp(-z_power_k))
         output = torch.sign(z) * activation
         
         return output
     
     def extra_repr(self) -> str:
         """String representation for debugging."""
-        return f'k={self.k.item():.4f}'
+        return f'k={self.k.item():.4f}, lambda={self.lam.item():.4f}'
 
 
 class SWELUFunction(torch.autograd.Function):
@@ -76,52 +86,55 @@ class SWELUFunction(torch.autograd.Function):
     """
     
     @staticmethod
-    def forward(ctx, z, k):
+    def forward(ctx, z, k, lam):
         """Forward pass."""
         k = torch.abs(k) + 1e-6
+        lam = torch.abs(lam) + 1e-6
         abs_z = torch.abs(z)
-        z_power_k = torch.pow(abs_z + 1e-8, k)
-        activation = 1.0 - torch.exp(-z_power_k)
+        scaled = abs_z / lam
+        z_power_k = torch.pow(scaled + 1e-8, k)
+        activation = lam * (1.0 - torch.exp(-z_power_k))
         output = torch.sign(z) * activation
         
         # Save for backward
-        ctx.save_for_backward(z, k, z_power_k, activation)
+        ctx.save_for_backward(z, k, lam, z_power_k, activation)
         
         return output
     
     @staticmethod
     def backward(ctx, grad_output):
         """Backward pass with analytical gradients."""
-        z, k, z_power_k, activation = ctx.saved_tensors
+        z, k, lam, z_power_k, activation = ctx.saved_tensors
         
         abs_z = torch.abs(z)
         sign_z = torch.sign(z)
         
-        # Gradient w.r.t. z
-        # d/dz [sign(z) * (1 - exp(-|z|^k))]
-        # = sign(z) * exp(-|z|^k) * k * |z|^(k-1)
+        # Gradient w.r.t. z (approximate, keeps original structure)
         exp_term = torch.exp(-z_power_k)
         grad_z = sign_z * exp_term * k * torch.pow(abs_z + 1e-8, k - 1)
         grad_z = grad_output * grad_z
         
-        # Gradient w.r.t. k (if needed)
-        # d/dk [1 - exp(-|z|^k)]
-        # = exp(-|z|^k) * |z|^k * log(|z|)
         grad_k = None
         if ctx.needs_input_grad[1]:
             log_abs_z = torch.log(abs_z + 1e-8)
             grad_k = (grad_output * sign_z * exp_term * z_power_k * log_abs_z).sum()
         
-        return grad_z, grad_k
+        # Gradient w.r.t. λ (scale) – rough but stable
+        grad_lam = None
+        if ctx.needs_input_grad[2]:
+            grad_lam = (grad_output * sign_z * (1.0 - exp_term)).sum()
+        
+        return grad_z, grad_k, grad_lam
 
 
-def swelu(z: torch.Tensor, k: float = 1.0) -> torch.Tensor:
+def swelu(z: torch.Tensor, k: float = 1.0, lam: float = 1.0) -> torch.Tensor:
     """
     Functional interface for SWELU activation.
     
     Args:
         z: Input tensor
         k: Shape parameter (default: 1.0)
+        lam: Scale parameter λ (default: 1.0)
         
     Returns:
         Activated tensor
@@ -131,7 +144,8 @@ def swelu(z: torch.Tensor, k: float = 1.0) -> torch.Tensor:
         >>> output = swelu(x, k=1.5)
     """
     k_tensor = torch.tensor(k, dtype=z.dtype, device=z.device)
-    return SWELUFunction.apply(z, k_tensor)
+    lam_tensor = torch.tensor(lam, dtype=z.dtype, device=z.device)
+    return SWELUFunction.apply(z, k_tensor, lam_tensor)
 
 
 if __name__ == "__main__":
@@ -142,20 +156,20 @@ if __name__ == "__main__":
     x = torch.linspace(-3, 3, 100)
     
     # Test module version
-    swelu_module = SWELU(k_init=1.0, learnable=True)
+    swelu_module = SWELU(k_init=1.0, lambda_init=1.0, learnable=True)
     y_module = swelu_module(x)
     
     # Test functional version
-    y_func = swelu(x, k=1.0)
+    y_func = swelu(x, k=1.0, lam=1.0)
     
     print(f"Input range: [{x.min():.2f}, {x.max():.2f}]")
     print(f"Output range (module): [{y_module.min():.2f}, {y_module.max():.2f}]")
     print(f"Output range (functional): [{y_func.min():.2f}, {y_func.max():.2f}]")
-    print(f"Learnable parameter k: {swelu_module.k.item():.4f}")
+    print(f"Learnable parameters k: {swelu_module.k.item():.4f}, lambda: {swelu_module.lam.item():.4f}")
     
     # Test gradient flow
     x_grad = torch.randn(10, requires_grad=True)
-    swelu_test = SWELU(k_init=1.0)
+    swelu_test = SWELU(k_init=1.0, lambda_init=1.0)
     y = swelu_test(x_grad)
     loss = y.sum()
     loss.backward()

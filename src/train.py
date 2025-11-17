@@ -313,6 +313,10 @@ class Trainer:
         )
         
         print(f"Checkpoint saved to {checkpoint_path}")
+        
+        # Auto-cleanup: Keep only last 3 checkpoints to save disk space
+        if not final:
+            self._cleanup_old_checkpoints(keep_last=3)
     
     def load_checkpoint(self, checkpoint_path: str):
         """Load training state from checkpoint."""
@@ -334,6 +338,24 @@ class Trainer:
             print(f"✅ Resuming from epoch {self.epoch}")
         
         print("Checkpoint loaded successfully!")
+    
+    def _cleanup_old_checkpoints(self, keep_last: int = 3):
+        """Delete old checkpoints, keeping only the most recent ones."""
+        import glob
+        
+        # Find all checkpoint files
+        checkpoint_pattern = str(self.checkpoint_dir / "model_step_*.pt")
+        checkpoints = sorted(glob.glob(checkpoint_pattern), key=lambda x: int(x.split('_')[-1].split('.')[0]))
+        
+        # Delete old checkpoints
+        if len(checkpoints) > keep_last:
+            to_delete = checkpoints[:-keep_last]
+            for ckpt_path in to_delete:
+                try:
+                    Path(ckpt_path).unlink()
+                    print(f"🧹 Deleted old checkpoint: {Path(ckpt_path).name}")
+                except Exception as e:
+                    print(f"⚠️  Failed to delete {ckpt_path}: {e}")
 
 
 def main():
@@ -404,7 +426,7 @@ def main():
         # No validation dataloader for SlimPajama streaming
         val_dataloader = None
         print("Note: Validation disabled for SlimPajama streaming mode")
-    else:
+    elif args.dataset == "wikipedia":
         print("Using Wikipedia dataset...")
         wiki_dataset = WikipediaDataset(seq_len=args.max_seq_len)
         train_dataset = wiki_dataset.load(split="train[:90%]")

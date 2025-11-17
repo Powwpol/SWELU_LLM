@@ -38,9 +38,12 @@ class KellyTaguchiLR:
         max_lr: float = 1e-3,
         min_lr: float = 1e-5,
         window_size: int = 100,
-        increase_factor: float = 1.05,
-        decrease_factor: float = 0.95,
-        patience: int = 10,
+        increase_factor: float = 1.0,
+        decrease_factor: float = 1.0,
+        patience: int = 10,  # conservé pour compat mais plus utilisé directement
+        plateau_tol: float = 1e-3,
+        max_adjust_fraction: float = 0.2,
+        weibull_shape: float = 1.5,
     ):
         self.optimizer = optimizer
         self.base_lr = base_lr
@@ -51,12 +54,46 @@ class KellyTaguchiLR:
         self.increase_factor = increase_factor
         self.decrease_factor = decrease_factor
         self.patience = patience
+        self.plateau_tol = plateau_tol
+        self.max_adjust_fraction = max_adjust_fraction
+        self.weibull_shape = weibull_shape
         
         self.current_lr = base_lr
         self.step_count = 0
         self.loss_history: List[float] = []
-        self.no_improvement_count = 0
-        self.best_avg_loss = float('inf')
+        self.no_improvement_count = 0  # gardé pour compatibilité
+        self.best_avg_loss = float('inf')  # gardé pour compatibilité
+        self._prev_avg_loss: Optional[float] = None  # plus utilisé directement
+
+    def _weibull_median_and_prob(self, current_loss: float) -> Optional[tuple]:
+        """
+        Estime la médiane et la probabilité d'écart du loss courant
+        sous une approximation de loi de Weibull ajustée sur la fenêtre récente.
+        """
+        window = self.loss_history[-self.window_size :] if self.loss_history else []
+        if len(window) == 0:
+            return None
+        # Médiane empirique (robuste) comme estimateur de la médiane de Weibull
+        sorted_win = sorted(window)
+        n = len(sorted_win)
+        if n % 2 == 1:
+            median = sorted_win[n // 2]
+        else:
+            median = 0.5 * (sorted_win[n // 2 - 1] + sorted_win[n // 2])
+
+        # Paramètre de forme fixé, on déduit l'échelle pour coller la médiane
+        k = self.weibull_shape
+        # median_theoretical = lambda * (ln 2)^(1/k)  -> lambda = median / (ln 2)^(1/k)
+        if median <= 0:
+            return None
+        lam = median / (math.log(2.0) ** (1.0 / k))
+
+        # CDF de Weibull: F(x) = 1 - exp(-(x/lambda)^k) pour x>=0
+        x = max(current_loss, 1e-8)
+        F_x = 1.0 - math.exp(-((x / lam) ** k))
+        # Probabilité d'écart vs médiane (0.5) : distance en probabilité, bornée dans [0,1]
+        p_dev = min(1.0, max(0.0, abs(F_x - 0.5) * 2.0))
+        return median, p_dev
         
     def get_warmup_lr(self, step: int) -> float:
         """Linear warmup learning rate."""
@@ -74,10 +111,10 @@ class KellyTaguchiLR:
     
     def step(self, loss: float):
         """
-        Update learning rate based on loss.
+        Update learning rate based on loss using an inverted Kelly logic.
         
-        Args:
-            loss: Current training loss
+        - On plateau (little or no improvement), INCREASE LR by a Kelly-style fraction.
+        - When loss clearly improves or degrades, DECREASE LR by a fraction.
         """
         self.step_count += 1
         self.loss_history.append(loss)
@@ -86,30 +123,25 @@ class KellyTaguchiLR:
         if self.step_count <= self.warmup_steps:
             new_lr = self.get_warmup_lr(self.step_count)
         else:
-            # Adaptive phase
-            avg_loss = self.get_moving_avg_loss()
-            
-            if avg_loss is None:
+            # Adaptive phase: utilise médiane + Weibull pour calibrer la fraction Kelly
+            stats = self._weibull_median_and_prob(loss)
+            if stats is None:
                 new_lr = self.current_lr
             else:
-                # Kelly-Taguchi logic
-                if avg_loss < self.best_avg_loss:
-                    # Loss is improving - increase LR (Kelly: bet more when winning)
-                    new_lr = self.current_lr * self.increase_factor
-                    self.best_avg_loss = avg_loss
-                    self.no_improvement_count = 0
+                median, p_dev = stats
+                # Fraction Kelly dimensionnée par la probabilité d'écart
+                frac = min(self.max_adjust_fraction, max(0.0, p_dev))
+
+                # Inversion logique demandée:
+                # - Si loss proche de la médiane (plateau) -> on augmente LR d'une fraction
+                # - Sinon (écart significatif) -> on diminue LR d'une fraction
+                if abs(loss - median) <= self.plateau_tol:
+                    adjust = 1.0 + self.increase_factor * frac
                 else:
-                    # Loss is stagnating or increasing
-                    self.no_improvement_count += 1
-                    
-                    if self.no_improvement_count >= self.patience:
-                        # Decrease LR (Taguchi: reduce variation)
-                        new_lr = self.current_lr * self.decrease_factor
-                        self.no_improvement_count = 0
-                    else:
-                        new_lr = self.current_lr
-                
-                # Clip to bounds
+                    adjust = 1.0 - self.decrease_factor * frac
+                    adjust = max(0.5, adjust)
+
+                new_lr = self.current_lr * adjust
                 new_lr = max(self.min_lr, min(self.max_lr, new_lr))
         
         # Update optimizer
