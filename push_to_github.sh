@@ -1,59 +1,20 @@
 #!/bin/bash
-# Script pour pusher le code sur GitHub
+# Push changes to GitHub
 
-echo "═══════════════════════════════════════════════════════════════════"
-echo "  🚀 PUSH TO GITHUB"
-echo "═══════════════════════════════════════════════════════════════════"
-echo ""
+echo "📦 Preparing to push to GitHub..."
 
-cd /root/SWELU_LLM
+# Configure git if needed (generic)
+git config --global user.email "swelu-agent@example.com"
+git config --global user.name "SWELU Agent"
 
-# Vérifier git status
-echo "📊 Statut Git:"
-git status --short | head -20
-echo ""
+# Add all changes
+git add .
 
-# Instructions
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📋 ÉTAPES POUR PUSHER SUR GITHUB:"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "1️⃣  Créer un repo sur GitHub:"
-echo "   https://github.com/new"
-echo "   Nom suggéré: SWELU_LLM ou MambaSWELU"
-echo ""
-echo "2️⃣  Configurer le remote (une seule fois):"
-echo "   git remote add origin https://github.com/YOUR_USERNAME/SWELU_LLM.git"
-echo ""
-echo "3️⃣  Commit et push:"
-echo "   git commit -m 'feat: MambaSWELU with exceptional 4.6 loss @ 20% training'"
-echo "   git push -u origin main"
-echo ""
-echo "   Ou si déjà configuré:"
-echo "   git push"
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
+# Commit
+git commit -m "Update: Hyper SWELU Model (Paul OBARA Logic) + Kelly-Taguchi LR + Streaming"
 
-# Vérifier remote
-if git remote get-url origin 2>/dev/null; then
-    echo "✅ Remote déjà configuré:"
-    git remote -v
-    echo ""
-    echo "🚀 Prêt à pusher!"
-    echo "   Exécuter: git commit -m 'votre message' && git push"
-else
-    echo "⚠️  Remote pas encore configuré"
-    echo ""
-    echo "📝 Configurer avec:"
-    echo "   git remote add origin https://github.com/YOUR_USERNAME/SWELU_LLM.git"
-fi
+# Push (assuming remote 'origin' is set)
+echo "🚀 Pushing to origin..."
+git push origin main
 
-echo ""
-echo "═══════════════════════════════════════════════════════════════════"
-echo "💡 CONSEIL:"
-echo "   1. Commit maintenant (code fonctionnel)"
-echo "   2. Continue l'entraînement"
-echo "   3. Push les résultats finaux plus tard"
-echo "═══════════════════════════════════════════════════════════════════"
-
+echo "✅ Done!"

@@ -34,6 +34,7 @@ except ImportError:
 from model import MambaSWELU
 from data_prep import WikipediaDataset, create_dataloader
 from slimpajama_dataloader import create_slimpajama_dataloader
+from kelly_taguchi_lr import KellyTaguchiLR
 
 
 class Trainer:
@@ -116,6 +117,15 @@ class Trainer:
             lr=learning_rate,
             weight_decay=weight_decay,
             betas=(0.9, 0.95),
+        )
+        
+        # Setup Kelly-Taguchi Scheduler
+        self.scheduler = KellyTaguchiLR(
+            optimizer=self.optimizer,
+            base_lr=learning_rate,
+            warmup_steps=warmup_steps,
+            max_lr=learning_rate * 3.0,  # Allow some upside
+            min_lr=learning_rate * 0.1,
         )
         
         # Setup mixed precision
@@ -218,10 +228,9 @@ class Trainer:
             
             # Update weights every gradient_accumulation_steps
             if (self.global_step + 1) % self.gradient_accumulation_steps == 0:
-                # Update learning rate
-                lr = self.get_lr(self.global_step)
-                for param_group in self.optimizer.param_groups:
-                    param_group['lr'] = lr
+                # Update learning rate (Kelly-Taguchi)
+                self.scheduler.step(loss)
+                lr = self.scheduler.get_last_lr()
                 
                 # Optimizer step
                 if self.scaler is not None:
@@ -254,7 +263,7 @@ class Trainer:
             if self.val_dataloader and self.global_step % self.eval_every == 0:
                 val_loss = self.evaluate()
                 if self.rank == 0:
-                    print(f"\nStep {self.global_step}: Validation loss = {val_loss:.4f}")
+                    print(f"\nLoss Val {self.global_step}: {val_loss:.4f}")
                 
                     if self.use_wandb:
                         wandb.log({"val/loss": val_loss, "val/step": self.global_step})

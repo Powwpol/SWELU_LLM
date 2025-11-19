@@ -1,0 +1,23 @@
+model:
+  vocab_size: 50257
+  d_model: 2048
+  n_layers: 32
+  max_seq_len: 2048
+  d_state: 16
+  d_conv: 4
+  expand: 2
+  dense_hidden_dim: 8192  # 4 * d_model
+  swelu_k: 1.0
+  dropout: 0.1
+  tie_embeddings: true
+
+training:
+  batch_size: 8
+  gradient_accumulation_steps: 8  # Effective batch size = 64
+  max_steps: 100000
+  learning_rate: 3e-4
+  weight_decay: 0.1
+  warmup_steps: 2000
+  mixed_precision: "bf16"
+  dataset: "slimpajama"
+  use_wandb: true
